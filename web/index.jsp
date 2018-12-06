@@ -12,6 +12,6 @@
   </head>
   <body>
   <h1>Welcome to IMDB-KINO</h1>
-  <%=ImdbKino.execute()%>
+  <%=new ImdbKino().execute()%>
   </body>
 </html>
