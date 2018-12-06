@@ -1,4 +1,5 @@
-<%@ page import="com.skov.ImdbKino" %><%--
+<%@ page import="com.skov.ImdbKino" %>
+<%@ page import="com.skov.ImdbKinoAalborgToday" %><%--
   Created by IntelliJ IDEA.
   User: ALSK
   Date: 06-12-2018
@@ -13,5 +14,8 @@
   <body>
   <h1>Welcome to IMDB-KINO</h1>
   <%=new ImdbKino().execute()%>
+  <h2>Og for Aalborg i dag:</h2>
+
+  <%=new ImdbKinoAalborgToday().execute()%>
   </body>
 </html>
