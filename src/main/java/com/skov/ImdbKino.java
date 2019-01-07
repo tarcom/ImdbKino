@@ -1,8 +1,6 @@
 package com.skov;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.net.URLEncoder;
 import java.util.TreeSet;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -32,10 +30,12 @@ public class ImdbKino {
 
         ExecutorService es = Executors.newCachedThreadPool();
         for (final Element film : alleFilm) {
-            es.execute(new Thread(film.html()) {
+            String movieTitle = film.html().trim();
+
+            es.execute(new Thread(movieTitle) {
                 public void run() {
                     System.out.println("Thread Running... name=" + getName());
-                    getSingleMovie(film);
+                    FetchSingleMovie.getSingleMovie(sortedMovies, movieTitle);
                 }
             });
         }
@@ -50,35 +50,11 @@ public class ImdbKino {
             htmlOutputStringBuffer.append(sortedMovie + " <br>\n");
         }
 
-        htmlOutputStringBuffer.append("<br><br>\n\nAll movies have been collected.");
+        htmlOutputStringBuffer.append("<br>\nAll movies have been collected.");
         htmlOutputStringBuffer.append(
             "<br>\nI started out with " + alleFilm.size() + " film, and have collected IMDB info from " + sortedMovies.size() + " movies. <br>\n");
         htmlOutputStringBuffer.append("Time used: " + (System.currentTimeMillis() - startTime) / 1000l + " seconds.<br>\n");
         return htmlOutputStringBuffer.toString();
     }
 
-    private void getSingleMovie(Element film) {
-        String imdbUrl = null;
-        try {
-            imdbUrl = "https://www.imdb.com/search/title?title=" + URLEncoder.encode(film.html().trim(), "UTF-8");
-
-            String imdbHtml = Jsoup.connect(imdbUrl).ignoreContentType(true).execute().body();
-
-            int beginIndex = imdbHtml.indexOf("ratings-imdb-rating\" name=\"ir\" data-value=\"");
-
-            String score = " N/A";
-            if (beginIndex != -1) {
-                beginIndex = beginIndex + 43;
-                String subString = imdbHtml.substring(beginIndex);
-                score = subString.substring(0, subString.indexOf("\""));
-            }
-
-            String movieHit = score + " <a href='" + imdbUrl + "'>link</a> - " + film.html();
-            sortedMovies.add(movieHit);
-            System.out.println(movieHit);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
 }

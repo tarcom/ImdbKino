@@ -12,10 +12,18 @@
     <title>Imdb-Kino</title>
   </head>
   <body>
-  <h1>Welcome to IMDB-KINO</h1>
-  <%=new ImdbKino().execute()%>
-  <h2>Og for Aalborg i dag:</h2>
 
+  <h1>Velkommen til IMDB-KINO</h1>
+
+  <h2>For Aalborg i dag:</h2>
   <%=new ImdbKinoAalborgToday().execute()%>
+
+  <h2>Og for alle kino.dk film:</h2>
+  <%=new ImdbKino().execute()%>
+
+  <br><br>
+  (C)2018 Allan Skov allan@aogj.com
+  <br><br>
+
   </body>
 </html>
