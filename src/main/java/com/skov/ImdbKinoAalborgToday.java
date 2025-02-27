@@ -23,15 +23,23 @@ public class ImdbKinoAalborgToday {
 
         StringBuffer htmlOutputStringBuffer = new StringBuffer();
 
-        String kinoUrl = "https://www.kino.dk/booking/flow/cinema-step-2?city=72";
+        //String kinoUrl = "https://www.kino.dk/booking/flow/cinema-step-2?city=72";
+        String kinoUrl = "https://kino.dk/biografer/nordisk-film-biografer-aalborg-city-syd";
+        
         htmlOutputStringBuffer.append("I will collect movies from " + kinoUrl + "<br>\n<br>\n");
         long startTime = System.currentTimeMillis();
 
-        Elements alleFilm = Jsoup.connect(kinoUrl).get().getElementsByClass("booking-flow-movie grid3  current");
+        //Elements alleFilm = Jsoup.connect(kinoUrl).get().getElementsByClass("booking-flow-movie grid3  current");
+        Elements alleFilm = Jsoup.connect(kinoUrl).get().getElementsByClass("movie-showtimes__movie-item");
 
+        System.out.println("I found " + alleFilm.size() + " movies in the html...");
+        
         ExecutorService es = Executors.newCachedThreadPool();
         for (final Element film : alleFilm) {
-            String movieTitle = film.getElementsByClass("movies-list-inner-wrap").select("h2").html();
+            //String movieTitle = film.getElementsByClass("movies-list-inner-wrap").select("h2").html();
+            String movieTitle = film.getElementsByClass("movie-showtimes__metadata-desktop").select("h2").html();
+            
+            
 
             es.execute(new Thread(movieTitle) {
                 public void run() {

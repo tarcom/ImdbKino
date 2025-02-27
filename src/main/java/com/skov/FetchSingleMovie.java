@@ -16,13 +16,15 @@ public class FetchSingleMovie {
 
     public static void main(String[] args) {
         TreeSet<String> sortedMovies = new TreeSet<String>();
-        getSingleMovie(sortedMovies, "Venom ");
+        getSingleMovie(sortedMovies, "Hundemand");
     }
 
     public static void getSingleMovie(TreeSet<String> sortedMovies, String film) {
         String imdbUrl = null;
         try {
-            imdbUrl = "https://www.imdb.com/search/title?title=" + URLEncoder.encode(film, "UTF-8");
+            
+            //imdbUrl = "https://www.imdb.com/search/title?title=" + URLEncoder.encode(film, "UTF-8");
+            imdbUrl = "https://kino.dk/film/" + URLEncoder.encode(film, "UTF-8");
 
             String imdbHtml = Jsoup.connect(imdbUrl).ignoreContentType(true).execute().body();
 
