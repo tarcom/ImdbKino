@@ -5,6 +5,7 @@ import java.net.URLEncoder;
 import java.util.TreeSet;
 
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 /**
  * Place description here.
@@ -16,32 +17,28 @@ public class FetchSingleMovie {
 
     public static void main(String[] args) {
         TreeSet<String> sortedMovies = new TreeSet<String>();
-        getSingleMovie(sortedMovies, "Hundemand");
+        getSingleMovie(sortedMovies, "The Monkey", "https://kino.dk/film/monkey");
     }
 
-    public static void getSingleMovie(TreeSet<String> sortedMovies, String film) {
+    public static void getSingleMovie(TreeSet<String> sortedMovies, String kinoMovieTitle, String kinoFilmUrl) {
         String imdbUrl = null;
         try {
-            
-            //imdbUrl = "https://www.imdb.com/search/title?title=" + URLEncoder.encode(film, "UTF-8");
-            imdbUrl = "https://kino.dk/film/" + URLEncoder.encode(film, "UTF-8");
 
-            String imdbHtml = Jsoup.connect(imdbUrl).ignoreContentType(true).execute().body();
+            Document kinoDoc = Jsoup.connect(kinoFilmUrl).get();
+            imdbUrl = Jsoup.connect(kinoFilmUrl).get().select(".logo.movie-view__imdb-logo a").first().attr("href");
 
-            int beginIndex = imdbHtml.indexOf("ratings-imdb-rating\" name=\"ir\" data-value=\"");
+            String censur = kinoDoc.select("div.movie-view__censur-wrapper").first().select("img").first().attr("alt");
+            //kinoDoc.select("div.movie-view__censur-wrapper").first().select(".hovertext").first().attr("data-hover")
 
-            String score = " N/A";
-            String genre = "";
-            String votes = "";
-            if (beginIndex != -1) {
-                beginIndex = beginIndex + 43;
-                String subString = imdbHtml.substring(beginIndex);
-                score = subString.substring(0, subString.indexOf("\""));
-                genre = " (" + Jsoup.connect(imdbUrl).get().getElementsByClass("genre").get(0).html() + ", ";
-                votes = "votes: " + Jsoup.connect(imdbUrl).get().getElementsByClass("sort-num_votes-visible").get(0).select("span").get(1).html() + ")";
-            }
 
-            String movieHit = score + " <a href='" + imdbUrl + "'>link</a> - <b>" + film + "</b>" + genre + votes;
+            Document document = Jsoup.connect(imdbUrl).get();
+            String score = document.select(".sc-d541859f-1.imUuxf").first().text();
+            String votes = document.select(".sc-d541859f-3.dwhNqC").first().text();
+
+            System.out.println("Title: " + kinoMovieTitle + ", kinoFilmUrl: " + kinoFilmUrl + ", imdbUrl: " + imdbUrl + ", score: " + score + ", votes: " + votes + ", censur: " + censur);
+
+
+            String movieHit = score + " <a href='" + imdbUrl + "'>link</a> - <b>" + kinoMovieTitle + "</b>" + "votes=" + votes + ", censur=" + censur;
             sortedMovies.add(movieHit);
             System.out.println(movieHit);
         } catch (IOException e) {

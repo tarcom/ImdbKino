@@ -6,10 +6,10 @@ import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
 
-public class ImdbKino2 {
+public class ImdbKino_singleThread {
 
     public static void main(String[] args) throws Exception {
-        new ImdbKino2().execute();
+        new ImdbKino_singleThread().execute();
     }
 
     public void execute() throws Exception {
